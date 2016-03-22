@@ -3,10 +3,11 @@
 #ifndef TEST_DATABASE_H_
 #define TEST_DATABASE_H_
 
+#include <string>
 
 class Database{
 public:
-	virtual Database();
+	Database();
 	virtual ~Database();
 
 	virtual bool createNewsgroup(const std::string& newsGroupName);

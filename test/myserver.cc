@@ -4,6 +4,7 @@
 #include "connectionclosedexception.h"
 #include "command.h"
 #include "database.h"
+// #include "InMemoryDatabase.h"
 
 #include <memory>
 #include <iostream>
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]){
 		cerr << "Server initialization error." << endl;
 		exit(1);
 	}
-	Database* data = new InMemoryDatabase();
+	Database* data = 0;
 	while (true) {
 		auto conn = server.waitForActivity();
 		if (conn != nullptr) {

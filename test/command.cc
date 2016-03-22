@@ -2,7 +2,7 @@
 
 #define inMem
 
-Command::handleCom(){
-	Database& = new InMemoryDatabase();
+void Command::handleCom(){
 	
+
 }

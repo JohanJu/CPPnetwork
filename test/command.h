@@ -4,6 +4,11 @@
 #include "connection.h"
 #include "connectionclosedexception.h"
 #include "database.h"
+#include <memory>
+#include <iostream>
+#include <string>
+#include <stdexcept>
+#include <cstdlib>
 
 class Command{
 public:
