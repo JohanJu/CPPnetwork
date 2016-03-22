@@ -3,6 +3,7 @@
 #include "connection.h"
 #include "connectionclosedexception.h"
 #include "command.h"
+#include "database.h"
 
 #include <memory>
 #include <iostream>
@@ -52,12 +53,12 @@ int main(int argc, char* argv[]){
 		cerr << "Server initialization error." << endl;
 		exit(1);
 	}
-	
+	Database* data = new InMemoryDatabase();
 	while (true) {
 		auto conn = server.waitForActivity();
 		if (conn != nullptr) {
 			try {
-				Command com(conn);
+				Command com(conn,data);
 				com.handleCom();
 				// cout<<"conn"<<endl;
 				// int nbr = readNumber(conn);
@@ -69,7 +70,7 @@ int main(int argc, char* argv[]){
 				// } else {
 				// 	result = "negative";
 				// }
-				writeString(conn, result);
+				// writeString(conn, result);
 			} catch (ConnectionClosedException&) {
 				server.deregisterConnection(conn);
 				cout << "Client closed connection" << endl;
@@ -80,4 +81,5 @@ int main(int argc, char* argv[]){
 			cout << "New client connects" << endl;
 		}
 	}
+	delete data;
 }
