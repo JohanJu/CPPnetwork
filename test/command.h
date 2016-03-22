@@ -10,14 +10,16 @@
 #include <stdexcept>
 #include <cstdlib>
 
-class Command{
+class Command {
 public:
-	Command(std::shared_ptr<Connection>& c, Database* d):conn(c),data(*d){}
+	Command(std::shared_ptr<Connection>& c, Database* d): conn(c), data(*d) {}
 	void handleCom();
 
 private:
-std::shared_ptr<Connection>& conn;
-Database& data;
+	std::string readString();
+	int readNumber();
+	std::shared_ptr<Connection>& conn;
+	Database& data;
 
 };
 
