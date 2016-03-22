@@ -1,25 +1,30 @@
 
 
-
+#ifndef TEST_DATABASE_H_
+#define TEST_DATABASE_H_
 
 
 class Database{
 public:
-	Database();
+	virtual Database();
+	virtual ~Database();
 
-	bool createNewsgroup(const std::string& newsGroupName);
+	virtual bool createNewsgroup(const std::string& newsGroupName);
 
-	bool deleteNewsgroup(const int& newsGroupId);
+	virtual bool deleteNewsgroup(const int& newsGroupId);
 
-	std::string listAllNewsgroups();
+	virtual std::string listAllNewsgroups();
 
-	bool createArticle(const int& newsGroupId, std::string title, std::string author, std::string text);
+	virtual bool createArticle(const int& newsGroupId, std::string title, std::string author, std::string text);
 
-	bool deleteArticle(const int& newsGroupId, const int& artId);
+	virtual bool deleteArticle(const int& newsGroupId, const int& artId);
 
-	std::string listArticle(const int& newsGroupId);
+	virtual std::string listArticle(const int& newsGroupId);
 
-	std::string getArticle(const int& newsGroupId, const int& artId);
+	virtual std::string getArticle(const int& newsGroupId, const int& artId);
+
+
 
 
 };
+#endif
