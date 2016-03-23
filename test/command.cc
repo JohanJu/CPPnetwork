@@ -10,10 +10,10 @@ string Command::readString() {
 	cout << "readString" << endl;
 	while (true) {
 		c = conn->read();
-		if(c==0){
+		if (c == 0) {
 			break;
 		}
-		re+=c;
+		re += c;
 	}
 	return re;
 }
@@ -31,26 +31,41 @@ void Command::handleCom() {
 	case Protocol::COM_LIST_NG:
 		cout << "test " << readString() << endl;
 		// data.listAllNewsgroups();
+		if (conn->read() != Protocol::COM_END)
+			cout << "no COM_END" << endl;
 		break;
 	case Protocol::COM_CREATE_NG:
 		data.createNewsgroup(readString());
+		if (conn->read() != Protocol::COM_END)
+			cout << "no COM_END" << endl;
 		break;
 	case Protocol::COM_DELETE_NG:
 		data.deleteNewsgroup(readNumber());
+		if (conn->read() != Protocol::COM_END)
+			cout << "no COM_END" << endl;
 		break;
 	case Protocol::COM_LIST_ART:
 		data.listArticle(readNumber());
+		if (conn->read() != Protocol::COM_END)
+			cout << "no COM_END" << endl;
 		break;
 	case Protocol::COM_CREATE_ART:
-		data.createArticle(readNumber(), readString(),readString(),readString());
+		data.createArticle(readNumber(), readString(), readString(), readString());
+		if (conn->read() != Protocol::COM_END)
+			cout << "no COM_END" << endl;
 		break;
 	case Protocol::COM_DELETE_ART:
 		data.deleteArticle(readNumber(), readNumber());
+		if (conn->read() != Protocol::COM_END)
+			cout << "no COM_END" << endl;
 		break;
 	case Protocol::COM_GET_ART:
 		data.getArticle(readNumber(), readNumber());
+		if (conn->read() != Protocol::COM_END)
+			cout << "no COM_END" << endl;
 		break;
 	default:
-		 ;
+		cout << "unknown COM" << endl;
 	}
+
 }
