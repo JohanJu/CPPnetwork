@@ -10,6 +10,7 @@
 #include <string>
 #include <stdexcept>
 #include <cstdlib>
+#include <vector>
 
 class Command {
 public:
@@ -19,9 +20,11 @@ public:
 private:
 	std::string readString();
 	int readNumber();
+	void writeString(const std::string&);
+	void writeNumber(int);
+	void end();
 	std::shared_ptr<Connection>& conn;
 	Database& data;
-
 };
 
 #endif
