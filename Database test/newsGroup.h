@@ -1,20 +1,27 @@
 
 #ifndef TEST_NEWSGROUP_H_
 #define TEST_NEWSGROUP_H_
-#include<string>
 
+#include<string>
+#include<algorithm>
+#include<vector>
+#include "article.h"
+
+using namespace std;
 class NewsGroup{
 
 
-using namespace std;
+
 
 public:
 	static int unique_id;
-	NewsGroup(const std::string& name): id(unique_id++), name(name) {}
+	NewsGroup(const std::string& name):  name(name) {
+		id = unique_id++;
+	}
 
 	void insertArticle(std::string title, std::string author, std::string text){
 
-		Article art = new Article(title,author,text);
+		Article art(title,author,text);
 		articles.push_back(art);
 
 	}
@@ -51,8 +58,11 @@ public:
 		if(it == articles.end()){
 			return "No article with this ID";
 		}
+		string title = it -> title;
+		string author = it -> author;
+		string text = it -> text;
 
-		std::string totalArt = "Title: " + (it -> title) + ", Author: " (it -> author) +", Text: " + (it -> text);
+		std::string totalArt = "Title: " + title + ", Author: " + author +", Text: " + text;
 
 		return totalArt;
 	}

@@ -13,8 +13,9 @@
 #include "newsGroup.h"
 #include "article.h"
 #include <algorithm>
+#include<utility>
 
-namespace std {
+using namespace std;
 
 class InMemoryDatabase: public Database {
 
@@ -26,7 +27,7 @@ public:
 
 	bool deleteNewsgroup(const int& newsGroupId);
 
-	std::string listAllNewsgroups();
+	vector<pair<int,string>> listAllNewsgroups();
 
 	bool createArticle(const int& newsGroupId, std::string title, std::string author, std::string text);
 
@@ -46,6 +47,5 @@ private:
 
 
 
-} /* namespace std */
 
 #endif /* TEST_INMEMORYDATABASE_H_ */

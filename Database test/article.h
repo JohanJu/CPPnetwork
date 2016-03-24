@@ -8,7 +8,9 @@ public:
 	static int unique_id;
 
 	Article(std::string title, std::string author, std::string text):
-		title(title), author(author), text(text), id(unique_id++){}
+		title(title), author(author), text(text) {
+		id = unique_id++;
+	}
 
 	int id;
 	std::string title;

@@ -6,8 +6,9 @@
  */
 
 #include "InMemoryDatabase.h"
+#include<utility>
 
-namespace std {
+using namespace std;
 
 
 bool InMemoryDatabase::createNewsgroup(const std::string& newsGroupName){
@@ -18,7 +19,7 @@ bool InMemoryDatabase::createNewsgroup(const std::string& newsGroupName){
 		return false;
 	}
 
-	NewsGroup ng = new NewsGroup(newsGroupName);
+	NewsGroup ng(newsGroupName);
 	newsGroups.push_back(ng);
 
 	return true;
@@ -40,14 +41,21 @@ bool InMemoryDatabase::deleteNewsgroup(const int& newsGroupId){
 	return true;
 }
 
-string InMemoryDatabase::listAllNewsgroups(){
+vector<pair<int,string>> InMemoryDatabase::listAllNewsgroups(){
 
-	string str;
-	for_each(newsGroups.begin(), newsGroups.end(), [&str] (NewsGroup ngs)
-			{
-		str += " id  = " + ngs.id + ", name = " + ngs.name + " | ";
+	vector<pair<int,string>> vec;
+	for_each(newsGroups.begin(), newsGroups.end(), [&vec] (NewsGroup ngs)
+				{
+			vec.push_back(make_pair(ngs.id, ngs.name));
 			});
-	return str;
+
+
+
+//	for_each(newsGroups.begin(), newsGroups.end(), [&str] (NewsGroup ngs)
+//			{
+//		str += " id  = " + ngs.id + ", name = " + ngs.name + " | ";
+//			});
+	return vec;
 }
 
 bool InMemoryDatabase::createArticle(const int& newsGroupId, std::string title, std::string author, std::string text){
@@ -119,4 +127,3 @@ bool InMemoryDatabase::standardCheck(const int& newsGroupId){
 }
 
 
-}

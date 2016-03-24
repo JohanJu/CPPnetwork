@@ -11,6 +11,7 @@ int main(){
 
 	string newsName = "Trump";
 
-
+	InMemoryDatabase* db = new InMemoryDatabase();
+	bool b = db -> createNewsgroup(newsName);
 
 }

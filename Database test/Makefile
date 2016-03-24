@@ -22,7 +22,7 @@ all: $(PROGS)
 
 # Targets rely on implicit rules for compiling and linking
 # The dependency on libclientserver.a is not defined.
-main: main.o InMemoryDatabase.o
+main: main.o InMemoryDatabase.o 
 
 # Phony targets
 .PHONY: all clean
