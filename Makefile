@@ -31,7 +31,7 @@ libclientserver.a: connection.o server.o
 
 # Standard clean
 clean:
-	rm -f *.o libclientserver.a
+	rm -f *.o 
 
 # Generate dependencies in *.d files
 %.d: %.cc
