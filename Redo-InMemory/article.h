@@ -8,7 +8,9 @@ public:
 
 
 	Article(std::string title, std::string author, std::string text):
-		title(title), author(author), text(text) {}
+		title(title), author(author), text(text) {
+		id = 5;
+	}
 
 	int id;
 	std::string title;

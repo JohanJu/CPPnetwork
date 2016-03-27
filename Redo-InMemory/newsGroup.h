@@ -15,7 +15,8 @@ class NewsGroup{
 
 public:
 
-	NewsGroup(const std::string& name):  name(name), id(5) {
+	NewsGroup(const std::string& name):  name(name) {
+		id = 5;
 	}
 
 	void insertArticle(std::string title, std::string author, std::string text){
@@ -61,7 +62,7 @@ public:
 		string author = it -> author;
 		string text = it -> text;
 
-		std::string totalArt = "Title: " + title + ", Author: " + author +", Text: " + text;
+		std::string totalArt = "Title: " + title + " | Author: " + author +" | Text: " + text;
 
 		return totalArt;
 	}

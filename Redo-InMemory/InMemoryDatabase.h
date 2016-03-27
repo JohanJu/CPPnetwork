@@ -10,18 +10,18 @@
 
 #include "database.h"
 #include <vector>
-#include "newsGroup.h"
-#include "article.h"
 #include <algorithm>
 #include<utility>
+#include"newsGroup.h"
 
 using namespace std;
 
-class InMemoryDatabase: public Database {
+class InMemoryDatabase {
 
 public:
 	InMemoryDatabase(){};
-	~InMemoryDatabase();
+	~InMemoryDatabase(){};
+
 
 	bool createNewsgroup(const std::string& newsGroupName);
 
