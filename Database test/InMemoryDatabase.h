@@ -33,7 +33,7 @@ public:
 
 	bool deleteArticle(const int& newsGroupId, const int& artId);
 
-	std::string listArticle(const int& newsGroupId);
+	std::vector<std::pair<int,std::string>> listArticle(const int& newsGroupId);
 
 	std::string getArticle(const int& newsGroupId, const int& artId);
 

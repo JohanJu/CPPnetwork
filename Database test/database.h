@@ -21,7 +21,7 @@ public:
 
 	virtual bool deleteArticle(const int& newsGroupId, const int& artId);
 
-	virtual std::string listArticle(const int& newsGroupId);
+	virtual std::vector<std::pair<int,std::string>> listArticle(const int& newsGroupId);
 
 	virtual std::string getArticle(const int& newsGroupId, const int& artId);
 
