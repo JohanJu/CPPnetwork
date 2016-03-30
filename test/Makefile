@@ -25,7 +25,7 @@ all: $(PROGS)
 
 # Targets rely on implicit rules for compiling and linking
 # The dependency on libclientserver.a is not defined.
-myserver: myserver.o command.o 
+myserver: myserver.o InMemoryDatabase.o command.o newsGroup.o article.o
 myclient: myclient.o
 testSendList: testSendList.o
 

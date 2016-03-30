@@ -8,30 +8,31 @@
 #ifndef TEST_INMEMORYDATABASE_H_
 #define TEST_INMEMORYDATABASE_H_
 
-#include "database.h"
 #include <vector>
+#include <algorithm>
+#include <utility>
 #include "newsGroup.h"
-#include "article.h"
 
-namespace std {
+using namespace std;
 
-class InMemoryDatabase: public Database {
+class InMemoryDatabase {
 
 public:
-	InMemoryDatabase();
-	~InMemoryDatabase();
+	InMemoryDatabase(){};
+	~InMemoryDatabase(){};
+
 
 	bool createNewsgroup(const std::string& newsGroupName);
 
 	bool deleteNewsgroup(const int& newsGroupId);
 
-	std::string listAllNewsgroups();
+	vector<pair<int,string>> listAllNewsgroups();
 
 	bool createArticle(const int& newsGroupId, std::string title, std::string author, std::string text);
 
 	bool deleteArticle(const int& newsGroupId, const int& artId);
 
-	std::string listArticle(const int& newsGroupId);
+	std::vector<std::pair<int,std::string>> listArticle(const int& newsGroupId);
 
 	std::string getArticle(const int& newsGroupId, const int& artId);
 
@@ -45,6 +46,5 @@ private:
 
 
 
-} /* namespace std */
 
 #endif /* TEST_INMEMORYDATABASE_H_ */
