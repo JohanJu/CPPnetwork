@@ -1,15 +1,12 @@
-/*
- * InMemoryDatabase.cpp
- *
- *  Created on: Mar 22, 2016
- *      Author: carl
- */
-
 #include "InMemoryDatabase.h"
+#include<utility>
+#include"newsGroup.h"
 
-namespace std {
+using namespace std;
 
-
+/*
+ *
+ */
 bool InMemoryDatabase::createNewsgroup(const std::string& newsGroupName){
 
 	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupName] (NewsGroup& ng)
@@ -18,11 +15,16 @@ bool InMemoryDatabase::createNewsgroup(const std::string& newsGroupName){
 		return false;
 	}
 
-	NewsGroup ng = new NewsGroup(newsGroupName);
+	NewsGroup ng(newsGroupName);
 	newsGroups.push_back(ng);
 
 	return true;
 }
+
+/*
+ *
+ *
+ */
 
 bool InMemoryDatabase::deleteNewsgroup(const int& newsGroupId){
 
@@ -30,7 +32,7 @@ bool InMemoryDatabase::deleteNewsgroup(const int& newsGroupId){
 				{ return ng.id == newsGroupId; } );
 
 	if(it == newsGroups.end()){
-		return true;
+		return false;
 	}
 
 	newsGroups.erase(remove_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
@@ -40,16 +42,25 @@ bool InMemoryDatabase::deleteNewsgroup(const int& newsGroupId){
 	return true;
 }
 
-string InMemoryDatabase::listAllNewsgroups(){
+/*
+ *
+ */
+vector<pair<int,string>> InMemoryDatabase::listAllNewsgroups(){
 
-	string str;
-	for_each(newsGroups.begin(), newsGroups.end(), [&str] (NewsGroup ngs)
-			{
-		str += " id  = " + ngs.id + ", name = " + ngs.name + " | ";
+	vector<pair<int,string>> vec;
+
+
+	for_each(newsGroups.begin(), newsGroups.end(), [&vec] (NewsGroup ngs)
+				{
+			vec.push_back(make_pair(ngs.id, ngs.name));
 			});
-	return str;
+
+	return vec;
 }
 
+/*
+ *
+ */
 bool InMemoryDatabase::createArticle(const int& newsGroupId, std::string title, std::string author, std::string text){
 
 	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
@@ -78,20 +89,6 @@ bool InMemoryDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 	return deleted;
 }
 
-string InMemoryDatabase::listArticle(const int& newsGroupId){
-	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
-					{ return ng.id == newsGroupId; } );
-
-	if( it == newsGroups.end()){
-		return "No NewsGroup with this ID";
-	}
-
-	string articles = it -> sortAndReturnArticles();
-	return articles;
-
-
-}
-
 string InMemoryDatabase::getArticle(const int& newsGroupId, const int& artId){
 	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
 					{ return ng.id == newsGroupId; } );
@@ -106,17 +103,19 @@ string InMemoryDatabase::getArticle(const int& newsGroupId, const int& artId){
 
 }
 
-// DöD kod just nu
-bool InMemoryDatabase::standardCheck(const int& newsGroupId){
+vector<std::pair<int,std::string>> InMemoryDatabase::listArticle(const int& newsGroupId){
 	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
 					{ return ng.id == newsGroupId; } );
+	pair<int,string> p (0,"tomatoes");
+	vector<pair<int,string>> vec;
+	vec.push_back(p);
 
 	if( it == newsGroups.end()){
-		return false;
+		return vec;
 	}
-	return true;
 
+	string articles = it -> sortAndReturnArticles();
+	return vec;
 }
 
 
-}

@@ -3,8 +3,7 @@
 #include "protocol.h"
 #include "connection.h"
 #include "connectionclosedexception.h"
-#include "database.h"
-// #include "InMemoryDatabase.h" //added
+#include "InMemoryDatabase.h"
 #include <memory>
 #include <iostream>
 #include <string>
@@ -14,7 +13,7 @@
 
 class Command {
 public:
-	Command(std::shared_ptr<Connection>& c, Database* d): conn(c), data(*d) {}
+	Command(std::shared_ptr<Connection>& c, InMemoryDatabase* d): conn(c), data(*d) {}
 	void handleCom();
 
 private:
@@ -24,7 +23,7 @@ private:
 	void writeNumber(int);
 	void end();
 	std::shared_ptr<Connection>& conn;
-	Database& data;
+	InMemoryDatabase& data;
 };
 
 #endif
