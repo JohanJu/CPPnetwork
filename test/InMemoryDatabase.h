@@ -8,10 +8,11 @@
 #ifndef TEST_INMEMORYDATABASE_H_
 #define TEST_INMEMORYDATABASE_H_
 
+
 #include <vector>
 #include <algorithm>
-#include <utility>
-#include "newsGroup.h"
+#include<utility>
+#include"newsGroup.h"
 
 using namespace std;
 

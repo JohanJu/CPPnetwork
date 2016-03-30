@@ -39,11 +39,11 @@ int main() {
 	}
 	try {
 		conn.write(Protocol::COM_LIST_NG);
-		string s = "hej";
-		for (unsigned char c : s) {
-			conn.write(c);
-		}
-		conn.write(0);
+		// string s = "hej";
+		// for (unsigned char c : s) {
+		// 	conn.write(c);
+		// }
+		// conn.write(0);
 		conn.write(Protocol::COM_END);
 
 		if (conn.read() != Protocol::ANS_LIST_NG)
