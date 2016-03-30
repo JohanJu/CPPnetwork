@@ -63,7 +63,7 @@ void Command::handleCom() {
 		// 	writeString(i->second);
 		// 	cout << "name " << i->second << endl;
 		// }
-		conn->write(Protocol::ANS_END);
+
 
 		break;
 	}
@@ -76,7 +76,6 @@ void Command::handleCom() {
 			conn->write(Protocol::ANS_NAK);
 			conn->write(Protocol::ERR_NG_ALREADY_EXISTS);
 		}
-		conn->write(Protocol::ANS_END);
 
 		break;
 	}
@@ -89,7 +88,7 @@ void Command::handleCom() {
 			conn->write(Protocol::ANS_NAK);
 			conn->write(Protocol::ERR_NG_DOES_NOT_EXIST);
 		}
-		conn->write(Protocol::ANS_END);
+
 
 		break;
 	}
@@ -107,11 +106,12 @@ void Command::handleCom() {
 				writeString(i->second);
 				cout << "name " << i->second << endl;
 			}
-			
-		}else{
-			
+
+		} else {
+
+			conn->write(Protocol::ERR_NG_DOES_NOT_EXIST);
 		}
-		conn->write(Protocol::ANS_END);
+
 		break;
 	}
 	case Protocol::COM_CREATE_ART: {
@@ -120,25 +120,55 @@ void Command::handleCom() {
 		string authur = readString();
 		string text = readString();
 		end();
-		data.createArticle(nr, title, authur, text);
+		if (data.createArticle(nr, title, authur, text)) {
+			conn->write(Protocol::ANS_ACK);
+		} else {
+			conn->write(Protocol::ANS_NAK);
+			conn->write(Protocol::ERR_NG_DOES_NOT_EXIST);
+		}
+
 		break;
 	}
 	case Protocol::COM_DELETE_ART: {
 		int gNr  = readNumber();
 		int aNr  = readNumber();
 		end();
-		data.deleteArticle(gNr, aNr);
+		int re = data.deleteArticle(gNr, aNr);
+		if (re == 0) {
+			conn->write(Protocol::ANS_ACK);
+		} else if (re == 1) {
+			conn->write(Protocol::ANS_NAK);
+			conn->write(Protocol::ERR_NG_DOES_NOT_EXIST);
+		} else {
+			conn->write(Protocol::ANS_NAK);
+			conn->write(Protocol::ERR_ART_DOES_NOT_EXIST);
+		}
+
 		break;
 	}
 	case Protocol::COM_GET_ART: {
 		int gNr  = readNumber();
 		int aNr  = readNumber();
 		end();
-		data.getArticle(gNr, aNr);
+		vector<string> v = data.getArticle(gNr, aNr);
+		if (v.size() == 3) {
+			conn->write(Protocol::ANS_ACK);
+			writeString(v[0]);
+			writeString(v[1]);
+			writeString(v[2]);
+		} else if (v.size() == 1) {
+			conn->write(Protocol::ANS_NAK);
+			conn->write(Protocol::ERR_ART_DOES_NOT_EXIST);
+		} else {
+			conn->write(Protocol::ANS_NAK);
+			conn->write(Protocol::ERR_NG_DOES_NOT_EXIST);
+		}
+
 		break;
 	}
 	default:
 		cout << "unknown COM" << endl;
 	}
+	conn->write(Protocol::ANS_END);
 
 }

@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
 		cerr << "Server initialization error." << endl;
 		exit(1);
 	}
-	InMemoryDatabase* data = 0;
+	InMemoryDatabase* data = new InMemoryDatabase();
 	while (true) {
 		auto conn = server.waitForActivity();
 		if (conn != nullptr) {
