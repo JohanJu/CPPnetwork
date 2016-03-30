@@ -1,6 +1,5 @@
 #include "InMemoryDatabase.h"
 #include<utility>
-#include"newsGroup.h"
 
 using namespace std;
 
@@ -49,11 +48,11 @@ vector<pair<int,string>> InMemoryDatabase::listAllNewsgroups(){
 
 	vector<pair<int,string>> vec;
 
-
+	sort(newsGroups.begin(), newsGroups.end());
 	for_each(newsGroups.begin(), newsGroups.end(), [&vec] (NewsGroup ngs)
-				{
-			vec.push_back(make_pair(ngs.id, ngs.name));
-			});
+	{
+		vec.push_back(make_pair(ngs.id, ngs.name));
+	});
 
 	return vec;
 }
@@ -97,24 +96,21 @@ string InMemoryDatabase::getArticle(const int& newsGroupId, const int& artId){
 		return "No NewsGroup with this ID";
 	}
 
-	string articleStr = it -> getArticleString(artId);
-
-	return articleStr;
-
+	string str = it -> getArticleString(artId);
+	return str;
 }
+
 
 vector<std::pair<int,std::string>> InMemoryDatabase::listArticle(const int& newsGroupId){
 	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
 					{ return ng.id == newsGroupId; } );
-	pair<int,string> p (0,"tomatoes");
-	vector<pair<int,string>> vec;
-	vec.push_back(p);
 
+	vector<pair<int,string>> vec;
 	if( it == newsGroups.end()){
 		return vec;
 	}
 
-	string articles = it -> sortAndReturnArticles();
+	vec = it -> sortAndReturnArticles();
 	return vec;
 }
 

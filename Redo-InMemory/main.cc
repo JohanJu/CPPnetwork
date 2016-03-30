@@ -5,6 +5,8 @@
 #include "InMemoryDatabase.h"
 #include<iostream>
 #include "database.h"
+#include <algorithm>
+#include <utility>
 
 int main(){
 
@@ -30,13 +32,6 @@ int main(){
 	c = db.deleteNewsgroup(id);
 	cout << "deleteNewsgroup(return 0 for correct): " << c << endl;
 
-	/*
-	 * Testing listAllNewsgroups, Should return "id : name"
-	 */
-	db.createNewsgroup(newsName);
-	vector<pair<int,string>> vec = db.listAllNewsgroups();
-	cout << vec[0].first << " : " << vec[0].second <<endl;
-
 
 	/*
 	 * Creating article
@@ -54,10 +49,19 @@ int main(){
 	d = db.deleteArticle(id,artId);
 	cout << "Deleted article: " << d << endl;
 
+
+
+
 	/*
-	 * getArticle,
+	 * Check the received newsGroups
 	 */
-	db.createArticle(id,title,author,description);
-	string str = db.getArticle(id,artId);
-	cout << str << endl;
+	db.createNewsgroup(newsName);
+	db.createNewsgroup("Cameltoe");
+	db.createNewsgroup("VegasDoesItAll");
+
+	vector<pair<int,string>> vec = db.listAllNewsgroups();
+	for_each(vec.begin(), vec.end(), [](pair<int,string>& p) { cout << p.second << endl;});
+
+	db.createNewsgroup("Baaanannnas");
+
 }

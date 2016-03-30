@@ -8,7 +8,7 @@
 #ifndef TEST_INMEMORYDATABASE_H_
 #define TEST_INMEMORYDATABASE_H_
 
-#include "database.h"
+
 #include <vector>
 #include <algorithm>
 #include<utility>

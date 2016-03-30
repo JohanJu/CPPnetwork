@@ -17,6 +17,7 @@ public:
 
 	NewsGroup(const std::string& name):  name(name) {
 		id = 5;
+		sysTime = time(0);
 	}
 
 	void insertArticle(std::string title, std::string author, std::string text){
@@ -45,9 +46,14 @@ public:
 	}
 
 	// sorts articles and returns a string with articles in order
-	std::string sortAndReturnArticles(){
+	std::vector<pair<int,std::string>> sortAndReturnArticles(){
 
-		return "";
+		vector<pair<int,string>> vec;
+		for_each(articles.begin(),articles.end(),[&vec](Article art){
+			vec.push_back(make_pair(art.id, art.title));
+		});
+
+		return vec;
 	}
 
 	std::string getArticleString(int artId){
@@ -67,11 +73,16 @@ public:
 		return totalArt;
 	}
 
+	bool operator<(const NewsGroup& ng){
+		return sysTime < ng.sysTime;
+	}
 
 	int id;
 	std::string name;
+	long double sysTime;
 
 private:
+
 
 
 	std::vector<Article> articles;
