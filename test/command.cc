@@ -4,18 +4,26 @@
 using namespace std;
 
 string Command::readString() {
+	if (conn->read() != Protocol::PAR_STRING) {
+		cout << "err PAR_STRING" << endl;
+	}
 	string re;
 	unsigned char c = 0;
-	while (true) {
+	int n = readNumberS();
+	for (int i = 0; i < n; ++i)
+	{
 		c = conn->read();
-		if (c == 0) {
-			break;
-		}
 		re += c;
 	}
 	return re;
 }
 int Command::readNumber() {
+	if (conn->read() != Protocol::PAR_NUM) {
+		cout << "err PAR_NUM" << endl;
+	}
+	return readNumber();
+}
+int Command::readNumberS() {
 	unsigned char byte1 = conn->read();
 	unsigned char byte2 = conn->read();
 	unsigned char byte3 = conn->read();
@@ -24,17 +32,24 @@ int Command::readNumber() {
 }
 
 void Command::writeString(const string& msg) {
+	conn->write(Protocol::PAR_STRING);
+	writeNumberS(msg.length());
 	for (unsigned char c : msg) {
 		conn->write(c);
 	}
-	conn->write(0);
+
 }
 
-void Command::writeNumber( int value) {
+void Command::writeNumberS(int value) {
 	conn->write((value >> 24) & 0xFF);
 	conn->write((value >> 16) & 0xFF);
 	conn->write((value >> 8) & 0xFF);
 	conn->write(value & 0xFF);
+}
+
+void Command::writeNumber(int value) {
+	conn->write(Protocol::PAR_NUM);
+	writeNumberS(value);
 }
 
 void Command::end() {
@@ -45,6 +60,7 @@ void Command::end() {
 }
 
 void Command::handleCom() {
+	cout << "handleCom " << endl;
 	switch (conn->read())
 	{
 	case Protocol::COM_LIST_NG: {
@@ -52,25 +68,29 @@ void Command::handleCom() {
 		// vector<pair<int, string>> v;
 		// v.push_back(make_pair(132542, "one"));
 		// v.push_back(make_pair(2, "two"));
-
-		vector<pair<int, string>> v = data.listAllNewsgroups();
+		end();
+		cout << "list " << endl;
 		conn->write(Protocol::ANS_LIST_NG);
-		// writeNumber(v.size());
-		// for (auto i = v.begin(); i != v.end(); ++i)
-		// {
-		// 	writeNumber(i->first);
-		// 	cout << "nr " << i->first << endl;
-		// 	writeString(i->second);
-		// 	cout << "name " << i->second << endl;
-		// }
+		vector<pair<int, string>> v = data.listAllNewsgroups();
+
+		writeNumber(v.size());
+		for (auto i = v.begin(); i != v.end(); ++i)
+		{
+			writeNumber(i->first);
+			cout << "nr " << i->first << endl;
+			writeString(i->second);
+			cout << "name " << i->second << endl;
+		}
 
 
 		break;
 	}
 	case Protocol::COM_CREATE_NG: {
+		string s = readString();
 		end();
+		cout << "create " << endl;
 		conn->write(Protocol::ANS_CREATE_NG);
-		if (data.createNewsgroup(readString())) {
+		if (data.createNewsgroup(s)) {
 			conn->write(Protocol::ANS_ACK);
 		} else {
 			conn->write(Protocol::ANS_NAK);
@@ -170,5 +190,6 @@ void Command::handleCom() {
 		cout << "unknown COM" << endl;
 	}
 	conn->write(Protocol::ANS_END);
+	cout << "end " << endl;
 
 }

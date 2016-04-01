@@ -31,7 +31,7 @@ void writeString(const shared_ptr<Connection>& conn, const string& s) {
 	for (char c : s) {
 		conn->write(c);
 	}
-	conn->write('$');
+	
 }
 
 int main(int argc, char* argv[]){
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
 		cerr << "Wrong port number. " << e.what() << endl;
 		exit(1);
 	}
-	
+
 	Server server(port);
 	if (!server.isReady()) {
 		cerr << "Server initialization error." << endl;
@@ -58,7 +58,8 @@ int main(int argc, char* argv[]){
 		auto conn = server.waitForActivity();
 		if (conn != nullptr) {
 			try {
-				Command com(conn,data);
+				Command com(conn, data);
+				cout << "conn " << endl;
 				com.handleCom();
 				// cout<<"conn"<<endl;
 				// int nbr = readNumber(conn);
