@@ -1,5 +1,6 @@
 #include "InMemoryDatabase.h"
 #include<utility>
+#include<iostream>
 
 using namespace std;
 
@@ -14,7 +15,10 @@ bool InMemoryDatabase::createNewsgroup(const std::string& newsGroupName){
 		return false;
 	}
 
-	NewsGroup ng(newsGroupName);
+	newsgroup_unique_id++;
+
+	NewsGroup ng(newsGroupName,newsgroup_unique_id);
+
 	newsGroups.push_back(ng);
 
 	return true;
@@ -47,7 +51,6 @@ bool InMemoryDatabase::deleteNewsgroup(const int& newsGroupId){
 vector<pair<int,string>> InMemoryDatabase::listAllNewsgroups(){
 
 	vector<pair<int,string>> vec;
-
 	sort(newsGroups.begin(), newsGroups.end());
 	for_each(newsGroups.begin(), newsGroups.end(), [&vec] (NewsGroup ngs)
 	{
@@ -73,31 +76,41 @@ bool InMemoryDatabase::createArticle(const int& newsGroupId, std::string title, 
 
 	return true;
 }
-
-bool InMemoryDatabase::deleteArticle(const int& newsGroupId, const int& artId){
+/*
+ * 0 = deleted, 1 = didnt find newsgroup, 2 = didnt find article
+ */
+int InMemoryDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 
 	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
 					{ return ng.id == newsGroupId; } );
 
 	if( it == newsGroups.end()){
-		return false;
+		return 1;
 	}
 
 	bool deleted = it -> deleteArticle(artId);
-
-	return deleted;
+	if(deleted == false){
+		return 2;
+	}
+	return 0;
 }
+/*
+ *  Cannot find newsgroup = return empty vector;
+ *  Cannot fint article = return with title = "fuck you johan"
+ *  Found article, return vector {title, author, text}
+ */
 
-string InMemoryDatabase::getArticle(const int& newsGroupId, const int& artId){
+vector<string> InMemoryDatabase::getArticle(const int& newsGroupId, const int& artId){
 	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
 					{ return ng.id == newsGroupId; } );
 
+	vector<string> vec;
 	if( it == newsGroups.end()){
-		return "No NewsGroup with this ID";
+		return vec;
 	}
 
-	string str = it -> getArticleString(artId);
-	return str;
+	vec = it -> getArticleString(artId);
+	return vec;
 }
 
 

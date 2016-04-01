@@ -1,5 +1,7 @@
 #include "InMemoryDatabase.h"
-#include<utility>
+#include <utility>
+#include<iostream>
+#include<algorithm>
 
 using namespace std;
 
@@ -47,13 +49,14 @@ bool InMemoryDatabase::deleteNewsgroup(const int& newsGroupId){
 vector<pair<int,string>> InMemoryDatabase::listAllNewsgroups(){
 
 	vector<pair<int,string>> vec;
-
+	cout << "before sort" << endl;
 	sort(newsGroups.begin(), newsGroups.end());
+	cout << "Before For_each" << endl;
 	for_each(newsGroups.begin(), newsGroups.end(), [&vec] (NewsGroup ngs)
 	{
 		vec.push_back(make_pair(ngs.id, ngs.name));
 	});
-
+	cout << "after For_each" << endl;
 	return vec;
 }
 

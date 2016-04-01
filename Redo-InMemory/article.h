@@ -7,9 +7,9 @@ class Article {
 public:
 
 
-	Article(std::string title, std::string author, std::string text):
-		title(title), author(author), text(text) {
-		id = 5;
+	Article(std::string title, std::string author, std::string text, int unique_id):
+		title(title), author(author), text(text), id(unique_id) {
+
 	}
 
 	int id;

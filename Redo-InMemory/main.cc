@@ -14,6 +14,8 @@ int main(){
 
 	InMemoryDatabase db;
 
+	vector<pair<int,string>> temp =  db.listAllNewsgroups();
+
 	/*
 	 * Test createNewsgroup
 	 */

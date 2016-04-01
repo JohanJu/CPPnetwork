@@ -31,17 +31,17 @@ public:
 
 	bool createArticle(const int& newsGroupId, std::string title, std::string author, std::string text);
 
-	bool deleteArticle(const int& newsGroupId, const int& artId);
+	int deleteArticle(const int& newsGroupId, const int& artId);
 
 	std::vector<std::pair<int,std::string>> listArticle(const int& newsGroupId);
 
-	std::string getArticle(const int& newsGroupId, const int& artId);
+	std::vector<std::string> getArticle(const int& newsGroupId, const int& artId);
 
 	bool standardCheck(const int& newsGroupId);
 
 private:
 	vector<NewsGroup> newsGroups;
-
+	int newsgroup_unique_id;
 
 };
 
