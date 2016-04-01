@@ -43,6 +43,8 @@ private:
 	vector<NewsGroup> newsGroups;
 	int newsgroup_unique_id;
 
+
+
 };
 
 
