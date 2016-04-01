@@ -100,8 +100,10 @@ void Command::handleCom() {
 		break;
 	}
 	case Protocol::COM_DELETE_NG: {
+		cout << "del1 " << endl;
 		int nr  = readNumber();
 		end();
+		cout << "del2 " << endl;
 		if (data.deleteNewsgroup(nr)) {
 			conn->write(Protocol::ANS_ACK);
 		} else {
