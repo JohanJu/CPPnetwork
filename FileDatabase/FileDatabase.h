@@ -14,6 +14,13 @@
 #include<iostream>
 #include <cstdlib>
 #include <fstream>
+#include <sstream>
+#include<sys/types.h>
+#include<dirent.h>
+#include<unistd.h>
+#include<unordered_set>
+#include <fstream>
+
 
 
 namespace std {
@@ -42,10 +49,14 @@ public:
 
 	bool exists(const string& name);
 
+	void listAllFiles();
+
 private:
 
 	string databaseFolder = "Database/";
 	int unique_newsgroup_id;
+	unordered_set<string> filesInFolder;
+
 
 };
 
