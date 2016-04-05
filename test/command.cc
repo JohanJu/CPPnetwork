@@ -21,7 +21,7 @@ int Command::readNumber() {
 	if (conn->read() != Protocol::PAR_NUM) {
 		cout << "err PAR_NUM" << endl;
 	}
-	return readNumber();
+	return readNumberS();
 }
 int Command::readNumberS() {
 	unsigned char byte1 = conn->read();
@@ -77,9 +77,9 @@ void Command::handleCom() {
 		for (auto i = v.begin(); i != v.end(); ++i)
 		{
 			writeNumber(i->first);
-			cout << "nr " << i->first << endl;
+			cout << "NG nr " << i->first << endl;
 			writeString(i->second);
-			cout << "name " << i->second << endl;
+			cout << "NG name " << i->second << endl;
 		}
 
 
@@ -104,6 +104,7 @@ void Command::handleCom() {
 		int nr  = readNumber();
 		end();
 		cout << "COM_DELETE_NG " << endl;
+		conn->write(Protocol::ANS_DELETE_NG);
 		if (data.deleteNewsgroup(nr)) {
 			conn->write(Protocol::ANS_ACK);
 		} else {
@@ -119,19 +120,21 @@ void Command::handleCom() {
 		end();
 		cout << "COM_LIST_ART " << endl;
 		vector<pair<int, string>> v = data.listArticle(nr);
-		conn->write(Protocol::ANS_LIST_NG);
-		if (v.size() != 0) {
+		conn->write(Protocol::ANS_LIST_ART);
+		if (true) {
+			cout << "COM_LIST_ART not null " << endl;
+			conn->write(Protocol::ANS_ACK);
 			writeNumber(v.size());
 			for (auto i = v.begin(); i != v.end(); ++i)
 			{
 				writeNumber(i->first);
-				cout << "nr " << i->first << endl;
+				cout << "A nr " << i->first << endl;
 				writeString(i->second);
-				cout << "name " << i->second << endl;
+				cout << "A name " << i->second << endl;
 			}
 
 		} else {
-
+			conn->write(Protocol::ANS_NAK);
 			conn->write(Protocol::ERR_NG_DOES_NOT_EXIST);
 		}
 
