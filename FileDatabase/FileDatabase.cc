@@ -27,7 +27,7 @@ FileDatabase::FileDatabase(){
 	//Checks what files are in the folder and adds them into a
 	//unordered_set, in case a file has been deleted manualy...
 	listAllFiles();
-	// Together with the line over, checks that the database is in the right state
+	// Together with the above listAllFiles(), checks that the database is in the right state
 	b = exists(databaseFolder + "manualMap");
 	if(!b){
 		ofstream of(databaseFolder + "manualMap");
@@ -35,8 +35,9 @@ FileDatabase::FileDatabase(){
 		cout << "manualMap added" << endl;
 	}
 	/*
-	 * If the file exists, it writes every line in to another temp document, then reads the lines back in
-	 * Newsgroups not in the system will be removed
+	 * If the file exists, it writes every line in to another temp document, then reads the lines
+	 * back in
+	 * to Newsgroups. NewsGroup file not existing => removed from ManualMap
 	 */
 	else{
 		ifstream in(databaseFolder + "manualMap");
@@ -64,12 +65,8 @@ FileDatabase::FileDatabase(){
 		of.close();
 		in.close();
 		remove("Database/manualMapTemp");
-
-
 	}
-
-
-	}
+}
 
 
 
@@ -120,10 +117,50 @@ bool FileDatabase::createNewsgroup(const string& newsGroupName){
 
 bool FileDatabase::deleteNewsgroup(const int& newsGroupId){
 
-	//bool b = exists(newsGroupId)
+
+		ifstream in(databaseFolder + "manualMap");
+		string strId;
+		string strName;
+		while(in >> strId >> strName){
+			if(stoi(strId) == newsGroupId){
+				in.close();
+				string strTemp = databaseFolder + strName;
+				int b = remove(strTemp.c_str());
+				cout << b << endl;
+				removeProcedure();
+			}
+	}
+	return true;
 }
 
 
+void FileDatabase::removeProcedure(){
+	ifstream in(databaseFolder + "manualMap");
+			string newsGroupName;
+			string id;
+			ofstream of(databaseFolder + "manualMapTemp");
+			while(in >> id >> newsGroupName){
+				auto it = filesInFolder.find(newsGroupName);
+				if(it != filesInFolder.end()){
+					of << id << " " << newsGroupName;
+					of << "\n";
+				} else{
+					cout << "Newsgroup removed from manualMap, id: " << id << endl;
+				}
+			}
+			in.close();
+			of.close();
+			of.open(databaseFolder + "manualMap");
+			in.open(databaseFolder + "manualMapTemp");
+			string str;
+			while(getline(in,str)){
+				of << str;
+				of << "\n";
+			}
+			of.close();
+			in.close();
+			remove("Database/manualMapTemp");
+}
 
 
 

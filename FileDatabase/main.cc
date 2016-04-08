@@ -25,5 +25,7 @@ int main(){
 	db.createNewsgroup("Tamm");
 	db.createNewsgroup("Zuma");
 
+	db.deleteNewsgroup(53);
+
 
 }

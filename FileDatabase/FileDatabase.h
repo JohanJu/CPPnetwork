@@ -20,6 +20,8 @@
 #include<unistd.h>
 #include<unordered_set>
 #include <fstream>
+#include <string>
+
 
 
 
@@ -53,6 +55,7 @@ public:
 
 private:
 
+	void removeProcedure();
 	string databaseFolder = "Database/";
 	int unique_newsgroup_id;
 	unordered_set<string> filesInFolder;
