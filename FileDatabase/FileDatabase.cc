@@ -161,9 +161,6 @@ bool FileDatabase::createArticle(const int& newsGroupId, string title, string au
 	of.close();
 	in.close();
 	remove((databaseFolder + tempNewsgroupName).c_str());
-
-
-
 }
 
 
