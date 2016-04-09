@@ -116,6 +116,8 @@ void Command::handleCom() {
 		break;
 	}
 	case Protocol::COM_LIST_ART: {
+
+		// ej klar
 		int nr  = readNumber();
 		end();
 		cout << "COM_LIST_ART " << endl;
@@ -147,11 +149,14 @@ void Command::handleCom() {
 		string text = readString();
 		end();
 		cout << "COM_CREATE_ART " << endl;
+		conn->write(Protocol::ANS_CREATE_ART);
 		if (data.createArticle(nr, title, authur, text)) {
 			conn->write(Protocol::ANS_ACK);
+			cout << "ok" << endl;
 		} else {
 			conn->write(Protocol::ANS_NAK);
 			conn->write(Protocol::ERR_NG_DOES_NOT_EXIST);
+			cout << "fail" << endl;
 		}
 
 		break;
@@ -161,6 +166,7 @@ void Command::handleCom() {
 		int aNr  = readNumber();
 		end();
 		cout << "COM_DELETE_ART " << endl;
+		conn->write(Protocol::ANS_DELETE_ART);
 		int re = data.deleteArticle(gNr, aNr);
 		if (re == 0) {
 			conn->write(Protocol::ANS_ACK);
@@ -180,6 +186,7 @@ void Command::handleCom() {
 		end();
 		cout << "COM_GET_ART " << endl;
 		vector<string> v = data.getArticle(gNr, aNr);
+		conn->write(Protocol::ANS_GET_ART);
 		if (v.size() == 3) {
 			conn->write(Protocol::ANS_ACK);
 			writeString(v[0]);
