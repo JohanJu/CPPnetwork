@@ -32,7 +32,7 @@ FileDatabase::FileDatabase(){
 	if(!b){
 		ofstream of(databaseFolder + "manualMap");
 		of.close();
-		cout << "manualMap added" << endl;
+//		cout << "manualMap added" << endl;
 	}
 	/*
 	 * If the file exists, it writes every line in to another temp document, then reads the lines
@@ -40,31 +40,8 @@ FileDatabase::FileDatabase(){
 	 * to Newsgroups. NewsGroup file not existing => removed from ManualMap
 	 */
 	else{
-		ifstream in(databaseFolder + "manualMap");
-		string newsGroupName;
-		string id;
-		ofstream of(databaseFolder + "manualMapTemp");
-		while(in >> id >> newsGroupName){
-			auto it = filesInFolder.find(newsGroupName);
-			if(it != filesInFolder.end()){
-				of << id << " " << newsGroupName;
-				of << "\n";
-			} else{
-				cout << "Newsgroup removed from manualMap, id: " << id << endl;
-			}
-		}
-		in.close();
-		of.close();
-		of.open(databaseFolder + "manualMap");
-		in.open(databaseFolder + "manualMapTemp");
-		string str;
-		while(getline(in,str)){
-			of << str;
-			of << "\n";
-		}
-		of.close();
-		in.close();
-		remove("Database/manualMapTemp");
+		removeProcedure();
+
 	}
 }
 
@@ -89,13 +66,13 @@ bool FileDatabase::createNewsgroup(const string& newsGroupName){
 		//Adds to the manualMap
 		add.open(databaseFolder + "manualMap", std::ios::app);
 		b = add.good();
-		cout << b << endl;
+//		cout << b << endl;
 		add << str << " " << newsGroupName;
 		add << "\n";
 		in.open(databaseFolder + "manualMap");
 		string temp;
 		while(getline(in,temp)){
-			cout << str << endl;
+	//		cout << str << endl;
 		}
 
 		//Updates the value for the next unique_newsgroup_id
@@ -116,8 +93,6 @@ bool FileDatabase::createNewsgroup(const string& newsGroupName){
 }
 
 bool FileDatabase::deleteNewsgroup(const int& newsGroupId){
-
-
 		ifstream in(databaseFolder + "manualMap");
 		string strId;
 		string strName;
@@ -125,46 +100,35 @@ bool FileDatabase::deleteNewsgroup(const int& newsGroupId){
 			if(stoi(strId) == newsGroupId){
 				in.close();
 				string strTemp = databaseFolder + strName;
-				int b = remove(strTemp.c_str());
-				cout << b << endl;
+				remove(strTemp.c_str());
+				filesInFolder.clear();
+				listAllFiles();
 				removeProcedure();
 			}
 	}
 	return true;
 }
 
-
-void FileDatabase::removeProcedure(){
+vector<pair<int,string>> FileDatabase::listAllNewsgroups(){
 	ifstream in(databaseFolder + "manualMap");
-			string newsGroupName;
-			string id;
-			ofstream of(databaseFolder + "manualMapTemp");
-			while(in >> id >> newsGroupName){
-				auto it = filesInFolder.find(newsGroupName);
-				if(it != filesInFolder.end()){
-					of << id << " " << newsGroupName;
-					of << "\n";
-				} else{
-					cout << "Newsgroup removed from manualMap, id: " << id << endl;
-				}
-			}
-			in.close();
-			of.close();
-			of.open(databaseFolder + "manualMap");
-			in.open(databaseFolder + "manualMapTemp");
-			string str;
-			while(getline(in,str)){
-				of << str;
-				of << "\n";
-			}
-			of.close();
-			in.close();
-			remove("Database/manualMapTemp");
+	string newsGroupName;
+	int id;
+	vector<pair<int,string>> pairs;
+	while(in >> id >> newsGroupName){
+		pairs.push_back(make_pair(id,newsGroupName));
+	}
+	return pairs;
 }
 
 
 
 
+
+
+
+/*
+ * Below are private helping methods
+ */
 
 bool FileDatabase::exists(const string& name) {
     ifstream f(name);
@@ -175,6 +139,34 @@ bool FileDatabase::exists(const string& name) {
         f.close();
         return false;
     }
+}
+
+void FileDatabase::removeProcedure(){
+	ifstream in(databaseFolder + "manualMap");
+	string newsGroupName;
+	string id;
+	ofstream of(databaseFolder + "manualMapTemp");
+	while(in >> id >> newsGroupName){
+		auto it = filesInFolder.find(newsGroupName);
+		if(it != filesInFolder.end()){
+			of << id << " " << newsGroupName;
+			of << "\n";
+		} else{
+			//			cout << "Newsgroup removed from manualMap, id: " << id << endl;
+		}
+	}
+	in.close();
+	of.close();
+	of.open(databaseFolder + "manualMap");
+	in.open(databaseFolder + "manualMapTemp");
+	string str;
+	while(getline(in,str)){
+		of << str;
+		of << "\n";
+	}
+	of.close();
+	in.close();
+	remove("Database/manualMapTemp");
 }
 
 void FileDatabase::listAllFiles()
@@ -195,25 +187,15 @@ void FileDatabase::listAllFiles()
 
 			if ( dp->d_type & DT_DIR )
 			{
-				// found a directory; recurse into it.
-//				string filePath = dirName + "/" + file;
-//
-//				listAllFiles( filePath );
 			}
 			else
 			{
 				filesInFolder.insert(file);
-				// regular file found
-				std::cout << "filename is: " << file << std::endl;
 			}
 		}
 		closedir( dirp );
 	}
 }
-
-
-
-
 
 
 } /* namespace std */

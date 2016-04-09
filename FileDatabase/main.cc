@@ -25,7 +25,8 @@ int main(){
 	db.createNewsgroup("Tamm");
 	db.createNewsgroup("Zuma");
 
-	db.deleteNewsgroup(53);
-
+	vector<pair<int,string>> vec = db.listAllNewsgroups();
+	for_each(vec.begin(), vec.end(), [](pair<int,string>& p) { cout <<
+		p.first << " " << p.second << endl;});
 
 }
