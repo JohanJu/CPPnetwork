@@ -54,7 +54,7 @@ public:
 	void listAllFiles();
 
 private:
-
+	string findNewsgroupName(const int& newsgroupName);
 	void removeProcedure();
 	string databaseFolder = "Database/";
 	int unique_newsgroup_id;

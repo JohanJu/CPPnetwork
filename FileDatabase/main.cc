@@ -28,5 +28,10 @@ int main(){
 	vector<pair<int,string>> vec = db.listAllNewsgroups();
 	for_each(vec.begin(), vec.end(), [](pair<int,string>& p) { cout <<
 		p.first << " " << p.second << endl;});
+	cout << "Newgroup id: ";
+	int ngId;
+	cin >> ngId;
+	cout << endl;
+	db.createArticle(ngId,"Peter Pan", "Don Juan", "One more down the chimney");
 
 }

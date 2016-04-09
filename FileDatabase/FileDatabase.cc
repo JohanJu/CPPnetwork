@@ -21,7 +21,7 @@ FileDatabase::FileDatabase(){
 	bool b = exists(databaseFolder + "unique_newsgroup_id");
 	if (!b){
 		ofstream of(databaseFolder + "unique_newsgroup_id");
-			of << "0\n";
+			of << "0";
 			of.close();
 	}
 	//Checks what files are in the folder and adds them into a
@@ -61,12 +61,12 @@ bool FileDatabase::createNewsgroup(const string& newsGroupName){
 		//Creates the new file with id = str, and newsGroupName
 		ofstream add(databaseFolder + newsGroupName);
 		add << str + "\n";
+		add << "0";
 		add.close();
 
 		//Adds to the manualMap
 		add.open(databaseFolder + "manualMap", std::ios::app);
 		b = add.good();
-//		cout << b << endl;
 		add << str << " " << newsGroupName;
 		add << "\n";
 		in.open(databaseFolder + "manualMap");
@@ -120,9 +120,50 @@ vector<pair<int,string>> FileDatabase::listAllNewsgroups(){
 	return pairs;
 }
 
+bool FileDatabase::createArticle(const int& newsGroupId, string title, string author,string text){
+
+	string newsgroupName = findNewsgroupName(newsGroupId);
+	string tempNewsgroupName = "temp"+ newsgroupName;
+
+	ifstream in(databaseFolder + newsgroupName);
+	ofstream of(databaseFolder + tempNewsgroupName);
+	int next_art_id;
+	in >> next_art_id;
+	of << next_art_id;
+	of << "\n";
+	in >> next_art_id;
+	next_art_id++;
+	of << next_art_id;
+	of << "\n";
+	string temp;
+	while(getline(in,temp)){
+		of << temp;
+	}
+
+	of << "\n";
+	string first = "<artId>" + to_string(next_art_id) + "</artId>" + "\n";
+	of << first;
+	of << title + "\n";
+	of << author + "\n";
+	of << text  + "\n";
+
+	of.close();
+	in.close();
+
+	of.open(databaseFolder + newsgroupName);
+	in.open(databaseFolder + tempNewsgroupName);
+
+	while(getline(in,temp)){
+		of << temp;
+		of << "\n";
+	}
+	of.close();
+	in.close();
+	remove((databaseFolder + tempNewsgroupName).c_str());
 
 
 
+}
 
 
 
@@ -140,6 +181,22 @@ bool FileDatabase::exists(const string& name) {
         return false;
     }
 }
+
+
+
+string FileDatabase::findNewsgroupName(const int& newsgroupId){
+	ifstream in(databaseFolder + "manualMap");
+	string strId;
+	string strName;
+	while(in >> strId >> strName){
+		if(stoi(strId) == newsgroupId){
+			return strName;
+		}
+	}
+
+	return "";
+}
+
 
 void FileDatabase::removeProcedure(){
 	ifstream in(databaseFolder + "manualMap");
