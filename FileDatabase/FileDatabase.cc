@@ -211,6 +211,33 @@ int FileDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 
 }
 
+vector<std::pair<int,string>> FileDatabase::listArticle(const int& newsGroupId){
+	string newsgroupName = findNewsgroupName(newsGroupId);
+	ifstream in(databaseFolder + newsgroupName);
+	vector<std::pair<int,string>> pairs;
+	string findFirst = "<artId>";
+	string findLast = "</artId>";
+	string temp;
+	while(getline(in,temp)){
+		size_t foundFirst = temp.find(findFirst);
+		if (foundFirst!=std::string::npos){
+			size_t foundLast = temp.find(findLast);
+			string tempId(temp,7, 1);
+			int id = stoi(tempId);
+			string title;
+			getline(in,title);
+			pairs.push_back(make_pair(id,title));
+		}
+	}
+	return pairs;
+
+}
+
+
+
+
+
+
 
 /*
  * Below are private helping methods
