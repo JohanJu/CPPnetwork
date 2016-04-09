@@ -43,6 +43,9 @@ int main(){
 	for_each(vec.begin(), vec.end(), [](pair<int,string>& p) { cout <<
 		p.first << " " << p.second << endl;});
 
+	vector<string> article = db.getArticle(6,3);
+	for_each(article.begin(), article.end(), [](string& p) { cout <<
+			p << endl;});
 
 
 }

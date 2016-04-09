@@ -230,6 +230,32 @@ vector<std::pair<int,string>> FileDatabase::listArticle(const int& newsGroupId){
 		}
 	}
 	return pairs;
+}
+
+
+vector<string> FileDatabase::getArticle(const int& newsGroupId, const int& artId){
+	string newsgroupName = findNewsgroupName(newsGroupId);
+	vector<string> artInfo;
+	ifstream in(databaseFolder + newsgroupName);
+	string find = "<artId>"+to_string(artId)+"</artId>";
+	string temp;
+	while(getline(in,temp)){
+		size_t foundFirst = temp.find(find);
+		if (foundFirst!=std::string::npos){
+			artInfo.push_back(to_string(artId));
+			string title;
+			getline(in,title);
+			artInfo.push_back(title);
+			string author;
+			getline(in,author);
+			artInfo.push_back(author);
+			string text;
+			getline(in,text);
+			artInfo.push_back(text);
+			break;
+		}
+	}
+	return artInfo;
 
 }
 
