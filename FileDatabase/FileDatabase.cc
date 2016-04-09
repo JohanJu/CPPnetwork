@@ -138,9 +138,10 @@ bool FileDatabase::createArticle(const int& newsGroupId, string title, string au
 	string temp;
 	while(getline(in,temp)){
 		of << temp;
+		of <<"\n";
 	}
+	of <<"\n";
 
-	of << "\n";
 	string first = "<artId>" + to_string(next_art_id) + "</artId>" + "\n";
 	of << first;
 	of << title + "\n";

@@ -33,5 +33,6 @@ int main(){
 	cin >> ngId;
 	cout << endl;
 	db.createArticle(ngId,"Peter Pan", "Don Juan", "One more down the chimney");
+	db.createArticle(ngId,"Compile C++","Carl R", "One does simply not compile C++ code" );
 
 }
