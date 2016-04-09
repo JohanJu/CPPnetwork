@@ -163,6 +163,53 @@ bool FileDatabase::createArticle(const int& newsGroupId, string title, string au
 	remove((databaseFolder + tempNewsgroupName).c_str());
 }
 
+int FileDatabase::deleteArticle(const int& newsGroupId, const int& artId){
+	string newsgroupName = findNewsgroupName(newsGroupId);
+	string tempNewsgroupName = "temp"+ newsgroupName;
+	ifstream in(databaseFolder + newsgroupName);
+	ofstream of(databaseFolder + tempNewsgroupName);
+	string temp;
+	string toFind = "<artId>"+to_string(artId)+ "</artId>";
+	bool deleteMarker = false;
+	while(getline(in,temp)){
+
+		if(deleteMarker){
+			size_t found = temp.find("<artId>");
+			if(found!=std::string::npos){
+				deleteMarker = false;
+				of << temp;
+				of <<"\n";
+				cout << "Found next article"<< endl;
+			}
+		} else {
+			size_t found = temp.find(toFind);
+			if (found!=std::string::npos)
+			{
+				cout << "Found article Id" << endl;
+				deleteMarker = true;
+			} else {
+				of << temp;
+				of <<"\n";
+			}
+		}
+
+	}
+	of << "\n";
+	of.close();
+	in.close();
+
+	of.open(databaseFolder + newsgroupName);
+	in.open(databaseFolder + tempNewsgroupName);
+
+	while(getline(in,temp)){
+		of << temp;
+		of << "\n";
+	}
+	of.close();
+	in.close();
+	remove((databaseFolder + tempNewsgroupName).c_str());
+
+}
 
 
 /*
