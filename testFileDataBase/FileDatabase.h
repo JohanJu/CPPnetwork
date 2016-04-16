@@ -47,18 +47,23 @@ public:
 
 	vector<string> getArticle(const int& newsGroupId, const int& artId);
 
+
+
+
+
+private:
 	bool standardCheck(const int& newsGroupId);
 
 	bool exists(const string& name);
 
 	void listAllFiles();
 
-private:
 	string findNewsgroupName(const int& newsgroupName);
 	void removeProcedure();
 	string databaseFolder = "Database/";
 	int unique_newsgroup_id;
 	unordered_set<string> filesInFolder;
+	string artEnd = "<ArtEnd/>";
 
 
 };

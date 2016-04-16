@@ -19,6 +19,7 @@ FileDatabase::FileDatabase(){
 	}
 	//Checks after the unique_newgroup_id file and adds it if it does not exist
 	bool b = exists(databaseFolder + "unique_newsgroup_id");
+	cout << "Unique newsgroup existing?" << b << endl;
 	if (!b){
 		ofstream of(databaseFolder + "unique_newsgroup_id");
 			of << "0";
@@ -32,7 +33,7 @@ FileDatabase::FileDatabase(){
 	if(!b){
 		ofstream of(databaseFolder + "manualMap");
 		of.close();
-//		cout << "manualMap added" << endl;
+
 	}
 	/*
 	 * If the file exists, it writes every line in to another temp document, then reads the lines
@@ -50,12 +51,13 @@ FileDatabase::FileDatabase(){
 bool FileDatabase::createNewsgroup(const string& newsGroupName){
 
 	bool b  = exists("Database/"+newsGroupName);
-
+	cout << newsGroupName << endl;
 	if( !b ){
 		// Fetches unique_newsgroup_id from the file
 		ifstream in(databaseFolder + "unique_newsgroup_id");
 		string str;
 		getline(in,str);
+		cout << "Unique Newsgroup Id: " << str << endl;
 		in.close();
 
 		//Creates the new file with id = str, and newsGroupName
@@ -72,7 +74,6 @@ bool FileDatabase::createNewsgroup(const string& newsGroupName){
 		in.open(databaseFolder + "manualMap");
 		string temp;
 		while(getline(in,temp)){
-	//		cout << str << endl;
 		}
 
 		//Updates the value for the next unique_newsgroup_id
@@ -80,6 +81,7 @@ bool FileDatabase::createNewsgroup(const string& newsGroupName){
 		int next_id;
 		istringstream buffer(str);
 		buffer >> next_id;
+		cout << "Next_id: " << next_id << endl;
 		next_id++;
 		of << next_id;
 		of.close();
@@ -93,38 +95,48 @@ bool FileDatabase::createNewsgroup(const string& newsGroupName){
 }
 
 bool FileDatabase::deleteNewsgroup(const int& newsGroupId){
-		ifstream in(databaseFolder + "manualMap");
-		string strId;
-		string strName;
-		while(in >> strId >> strName){
-			if(stoi(strId) == newsGroupId){
-				in.close();
-				string strTemp = databaseFolder + strName;
-				remove(strTemp.c_str());
-				filesInFolder.clear();
-				listAllFiles();
-				removeProcedure();
-			}
+	ifstream in(databaseFolder + "manualMap");
+	string strId;
+	string strName;
+	string str;
+	while(getline(in,str)){
+		strId = str.substr(0,1);
+		strName = str.substr(2,str.size() - 1);
+		if(stoi(strId) == newsGroupId){
+			in.close();
+			string strTemp = databaseFolder + strName;
+			remove(strTemp.c_str());
+			filesInFolder.clear();
+			listAllFiles();
+			removeProcedure();
+			return true;
+		}
 	}
-	return true;
+
+	return false;
 }
 
 vector<pair<int,string>> FileDatabase::listAllNewsgroups(){
 	ifstream in(databaseFolder + "manualMap");
 	string newsGroupName;
+	string tempId;
 	int id;
+	string str;
 	vector<pair<int,string>> pairs;
-	while(in >> id >> newsGroupName){
+	while(getline(in,str)){
+		tempId = str.substr(0,1);
+		id = stoi(tempId);
+		newsGroupName = str.substr(2,str.size() - 1);
 		pairs.push_back(make_pair(id,newsGroupName));
 	}
+
+	cout << pairs.size() << endl;
 	return pairs;
 }
 
 bool FileDatabase::createArticle(const int& newsGroupId, string title, string author,string text){
 
 	string newsgroupName = findNewsgroupName(newsGroupId);
-//	cout << "newsgroupName: ";
-//	cout << newsgroupName << endl;
 	cout << "CREATE ARTICLE ---------" << endl;
 	if(newsgroupName == ""){
 		return false;
@@ -152,7 +164,8 @@ bool FileDatabase::createArticle(const int& newsGroupId, string title, string au
 	of << first;
 	of << title + "\n";
 	of << author + "\n";
-	of << text  + "\n";
+	of << text;
+	of << artEnd + "\n";
 
 	of.close();
 	in.close();
@@ -172,18 +185,24 @@ bool FileDatabase::createArticle(const int& newsGroupId, string title, string au
 
 int FileDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 	string newsgroupName = findNewsgroupName(newsGroupId);
+	if(newsgroupName == ""){
+		return 1;
+	}
+	cout << newsgroupName << endl;
 	string tempNewsgroupName = "temp"+ newsgroupName;
 	ifstream in(databaseFolder + newsgroupName);
 	ofstream of(databaseFolder + tempNewsgroupName);
 	string temp;
 	string toFind = "<artId>"+to_string(artId)+ "</artId>";
 	bool deleteMarker = false;
+	bool isFound = false;
 	while(getline(in,temp)){
 
 		if(deleteMarker){
 			size_t found = temp.find("<artId>");
 			if(found!=std::string::npos){
 				deleteMarker = false;
+
 				of << temp;
 				of <<"\n";
 				cout << "Found next article"<< endl;
@@ -194,6 +213,7 @@ int FileDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 			{
 				cout << "Found article Id" << endl;
 				deleteMarker = true;
+				isFound = true;
 			} else {
 				of << temp;
 				of <<"\n";
@@ -215,12 +235,16 @@ int FileDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 	of.close();
 	in.close();
 	remove((databaseFolder + tempNewsgroupName).c_str());
+	if(isFound){
+		return 0;
+	} else {
+		return 2;
+	}
+
 }
 
 vector<std::pair<int,string>> FileDatabase::listArticle(const int& newsGroupId, int &noll){
 	string newsgroupName = findNewsgroupName(newsGroupId);
-//	cout << "newsgroupName: ";
-//	cout << newsgroupName << endl;
 	vector<std::pair<int,string>> pairs;
 	cout << "LIST ARTICLE ---------" << endl;
 	if(newsgroupName != ""){
@@ -243,7 +267,6 @@ vector<std::pair<int,string>> FileDatabase::listArticle(const int& newsGroupId, 
 	} else {
 		noll = 0;
 	}
-
 	return pairs;
 }
 
@@ -267,8 +290,19 @@ vector<string> FileDatabase::getArticle(const int& newsGroupId, const int& artId
 //			cout << "ArticleAuthor: " << author << endl;
 			artInfo.push_back(author);
 			string text;
-			getline(in,text);
-//			cout << "ArticleText: " << text << endl;
+			string str;
+			while(getline(in,str)){
+				cout << str << endl;
+				size_t foundText = str.find(artEnd);
+				if(foundText == std::string::npos){
+					text += str;
+					text += "\n";
+				} else {
+					text += str.substr(0, str.size() - artEnd.size());
+					break;
+				}
+			}
+//			getline(in,text);
 			artInfo.push_back(text);
 			break;
 		}
@@ -278,7 +312,6 @@ vector<string> FileDatabase::getArticle(const int& newsGroupId, const int& artId
 	}
 	cout << artInfo.size() << endl;
 	return artInfo;
-
 }
 
 
@@ -308,12 +341,14 @@ string FileDatabase::findNewsgroupName(const int& newsgroupId){
 	ifstream in(databaseFolder + "manualMap");
 	string strId;
 	string strName;
-	while(in >> strId >> strName){
+	string str;
+	while(getline(in, str)){
+		strId = str.substr(0,1);
+		strName = str.substr(2,str.size() - 1);
 		if(stoi(strId) == newsgroupId){
 			return strName;
 		}
 	}
-
 	return "";
 }
 
@@ -323,15 +358,17 @@ void FileDatabase::removeProcedure(){
 	string newsGroupName;
 	string id;
 	ofstream of(databaseFolder + "manualMapTemp");
-	while(in >> id >> newsGroupName){
+	string temp;
+	while(getline(in,temp)){
+		id = temp.substr(0,1);
+		newsGroupName = temp.substr(2,temp.size() - 1);
 		auto it = filesInFolder.find(newsGroupName);
 		if(it != filesInFolder.end()){
 			of << id << " " << newsGroupName;
 			of << "\n";
-		} else{
-			//			cout << "Newsgroup removed from manualMap, id: " << id << endl;
 		}
 	}
+
 	in.close();
 	of.close();
 	of.open(databaseFolder + "manualMap");
@@ -359,7 +396,7 @@ void FileDatabase::listAllFiles()
 		{
 			std::string file( dp->d_name );
 
-			if ( file == "." || file == ".." )    // skip these
+			if ( file == "." || file == ".." )
 				continue;
 
 			if ( dp->d_type & DT_DIR )
