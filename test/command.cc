@@ -121,9 +121,10 @@ void Command::handleCom() {
 		int nr  = readNumber();
 		end();
 		cout << "COM_LIST_ART " << endl;
-		vector<pair<int, string>> v = data.listArticle(nr);
+		int noll;
+		vector<pair<int, string>> v = data.listArticle(nr,noll);
 		conn->write(Protocol::ANS_LIST_ART);
-		if (true) {
+		if (noll!=0) {
 			cout << "COM_LIST_ART not null " << endl;
 			conn->write(Protocol::ANS_ACK);
 			writeNumber(v.size());

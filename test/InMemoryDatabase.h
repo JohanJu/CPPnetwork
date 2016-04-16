@@ -33,7 +33,7 @@ public:
 
 	int deleteArticle(const int& newsGroupId, const int& artId);
 
-	std::vector<std::pair<int,std::string>> listArticle(const int& newsGroupId);
+	std::vector<std::pair<int,std::string>> listArticle(const int& newsGroupId,int &noll);
 
 	std::vector<std::string> getArticle(const int& newsGroupId, const int& artId);
 
@@ -42,6 +42,8 @@ public:
 private:
 	vector<NewsGroup> newsGroups;
 	int newsgroup_unique_id;
+
+
 
 };
 

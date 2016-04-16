@@ -106,23 +106,26 @@ vector<string> InMemoryDatabase::getArticle(const int& newsGroupId, const int& a
 
 	vector<string> vec;
 	if( it == newsGroups.end()){
+		
 		return vec;
 	}
 
 	vec = it -> getArticleString(artId);
+	
 	return vec;
 }
 
 
-vector<std::pair<int,std::string>> InMemoryDatabase::listArticle(const int& newsGroupId){
+vector<std::pair<int,std::string>> InMemoryDatabase::listArticle(const int& newsGroupId, int &noll){
 	auto it = find_if(newsGroups.begin(), newsGroups.end(), [&newsGroupId] (NewsGroup& ng)
 					{ return ng.id == newsGroupId; } );
 
 	vector<pair<int,string>> vec;
 	if( it == newsGroups.end()){
+		noll = 0;
 		return vec;
 	}
-
+	noll = 1;
 	vec = it -> sortAndReturnArticles();
 	return vec;
 }
