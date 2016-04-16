@@ -89,7 +89,7 @@ public:
 private:
 
 
-	int article_unique_id;
+	int article_unique_id = 0;
 	std::vector<Article> articles;
 
 
