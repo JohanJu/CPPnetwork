@@ -200,13 +200,13 @@ int FileDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 
 				of << temp;
 				of <<"\n";
-				cout << "Found next article"<< endl;
+
 			}
 		} else {
 			size_t found = temp.find(toFind);
 			if (found!=std::string::npos)
 			{
-				cout << "Found article Id" << endl;
+
 				deleteMarker = true;
 				isFound = true;
 			} else {
@@ -235,7 +235,6 @@ int FileDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 	} else {
 		return 2;
 	}
-
 }
 
 vector<std::pair<int,string>> FileDatabase::listArticle(const int& newsGroupId, int &noll){
