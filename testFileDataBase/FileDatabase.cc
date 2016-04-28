@@ -19,7 +19,6 @@ FileDatabase::FileDatabase(){
 	}
 	//Checks after the unique_newgroup_id file and adds it if it does not exist
 	bool b = exists(databaseFolder + "unique_newsgroup_id");
-	cout << "Unique newsgroup existing?" << b << endl;
 	if (!b){
 		ofstream of(databaseFolder + "unique_newsgroup_id");
 			of << "0";
@@ -51,13 +50,11 @@ FileDatabase::FileDatabase(){
 bool FileDatabase::createNewsgroup(const string& newsGroupName){
 
 	bool b  = exists("Database/"+newsGroupName);
-	cout << newsGroupName << endl;
 	if( !b ){
 		// Fetches unique_newsgroup_id from the file
 		ifstream in(databaseFolder + "unique_newsgroup_id");
 		string str;
 		getline(in,str);
-		cout << "Unique Newsgroup Id: " << str << endl;
 		in.close();
 
 		//Creates the new file with id = str, and newsGroupName
@@ -81,7 +78,6 @@ bool FileDatabase::createNewsgroup(const string& newsGroupName){
 		int next_id;
 		istringstream buffer(str);
 		buffer >> next_id;
-		cout << "Next_id: " << next_id << endl;
 		next_id++;
 		of << next_id;
 		of.close();
@@ -137,7 +133,6 @@ vector<pair<int,string>> FileDatabase::listAllNewsgroups(){
 bool FileDatabase::createArticle(const int& newsGroupId, string title, string author,string text){
 
 	string newsgroupName = findNewsgroupName(newsGroupId);
-	cout << "CREATE ARTICLE ---------" << endl;
 	if(newsgroupName == ""){
 		return false;
 	}
@@ -246,7 +241,6 @@ int FileDatabase::deleteArticle(const int& newsGroupId, const int& artId){
 vector<std::pair<int,string>> FileDatabase::listArticle(const int& newsGroupId, int &noll){
 	string newsgroupName = findNewsgroupName(newsGroupId);
 	vector<std::pair<int,string>> pairs;
-	cout << "LIST ARTICLE ---------" << endl;
 	if(newsgroupName != ""){
 		noll = 1;
 		ifstream in(databaseFolder + newsgroupName);
@@ -277,7 +271,6 @@ vector<string> FileDatabase::getArticle(const int& newsGroupId, const int& artId
 	ifstream in(databaseFolder + newsgroupName);
 	string find = "<artId>"+to_string(artId)+"</artId>";
 	string temp;
-	cout << "GET ARTICLE ---------" << endl;
 	while(getline(in,temp)){
 		size_t foundFirst = temp.find(find);
 		if (foundFirst!=std::string::npos){

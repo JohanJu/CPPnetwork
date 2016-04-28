@@ -84,6 +84,7 @@ void handleCom(int com) {
 		conn->write(Protocol::COM_END);
 		conn->read();
 		int n = readNumber();
+		cout << "nnr: " << n << endl;
 		for (int i = 0; i < n; ++i)
 		{
 			cout << "nr: " << readNumber(); 
@@ -103,8 +104,10 @@ void handleCom(int com) {
 		char c = conn->read();
 		if(c == Protocol::ANS_ACK)
 			cout << "OK" << endl;
-		else
+		else{
 			cout << "NG exist" << endl;
+			conn->read();
+		}
 		conn->read();
 		break;
 	}
