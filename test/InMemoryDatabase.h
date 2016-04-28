@@ -41,7 +41,7 @@ public:
 
 private:
 	vector<NewsGroup> newsGroups;
-	int newsgroup_unique_id;
+	int newsgroup_unique_id = 0;
 
 
 
